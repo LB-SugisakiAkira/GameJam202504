@@ -2,10 +2,11 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 1.0f; // 移動速度
-    [SerializeField] private Animator animator; // アニメーター用の変数
-
-    private void Update()
+    [SerializeField] private float moveSpeed = 1.0f;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Rigidbody rigidBody;
+    
+    private void FixedUpdate()
     {
         // 入力の取得
         var moveHorizontal = Input.GetAxis("Horizontal");
@@ -13,7 +14,7 @@ public class PlayerController : MonoBehaviour
         var movement = new Vector3(moveHorizontal, 0.0f, moveVertical).normalized;
 
         // 移動
-        transform.position += movement * (moveSpeed * Time.deltaTime);
+        rigidBody.MovePosition(rigidBody.position + movement * (moveSpeed * Time.fixedDeltaTime));
 
         // アニメーショの制御
         var isMove = movement.magnitude > 0;
