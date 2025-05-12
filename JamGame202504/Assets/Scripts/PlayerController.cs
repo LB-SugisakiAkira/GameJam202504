@@ -7,8 +7,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Rigidbody rigidBody;
     [SerializeField] private Transform cameraTransform;
 
+    private bool isControllable = true;
+
     private void FixedUpdate()
     {
+        if (!isControllable) return;
+        
         // 入力の取得
         var moveHorizontal = Input.GetAxis("Horizontal");
         var moveVertical = Input.GetAxis("Vertical");
@@ -38,5 +42,16 @@ public class PlayerController : MonoBehaviour
             var targetRotation = Quaternion.LookRotation(movement);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
         }
+    }
+
+    public void StopControl()
+    {
+        isControllable = false;
+        animator.SetBool("isRunning", false);
+    }
+    
+    public void ResumeControl()
+    {
+        isControllable = true;
     }
 }
