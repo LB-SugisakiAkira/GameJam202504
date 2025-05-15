@@ -20,6 +20,16 @@ public class BattleFlowController  : SingletonMonoBehaviour<BattleFlowController
     }
 
     /**
+     * バトルの終了
+     */
+    public  void EndBattle()
+    {
+        battleUI.SetActive(false);
+        player.ResumeControl();
+        cameraController.enabled = true;
+    }
+    
+    /**
      * 敵がプレイヤーに攻撃するアニメーション
      * モーション終了を待機する
      */

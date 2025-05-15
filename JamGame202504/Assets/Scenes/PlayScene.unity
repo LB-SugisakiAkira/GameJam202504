@@ -542,7 +542,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: "\u623B\u308B"
 --- !u!222 &348083825
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1613,13 +1613,14 @@ GameObject:
   - component: {fileID: 1205420419}
   - component: {fileID: 1205420421}
   - component: {fileID: 1205420420}
+  - component: {fileID: 1205420422}
   m_Layer: 5
   m_Name: BattleUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1205420419
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1679,6 +1680,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1205420418}
   m_CullTransparentMesh: 1
+--- !u!114 &1205420422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205420418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afff71de1a2ee88438d0b2ba3d882325, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  returnButton: {fileID: 1066835430}
 --- !u!1 &1251672646
 GameObject:
   m_ObjectHideFlags: 0
