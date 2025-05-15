@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public class BattleManager : SingletonMonoBehaviour<BattleManager>
+public class BattleFlowController  : SingletonMonoBehaviour<BattleFlowController >
 {
     [SerializeField] private GameObject battleUI;
     [SerializeField] private CinemachineInputAxisController cameraController;
@@ -19,6 +19,10 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
         battleUI.SetActive(true);
     }
 
+    /**
+     * 敵がプレイヤーに攻撃するアニメーション
+     * モーション終了を待機する
+     */
     private async UniTask PlayEnemyAttack(Animator enemyAnimator)
     {
         if (!enemyAnimator) return;

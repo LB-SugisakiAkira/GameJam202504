@@ -9,6 +9,6 @@ public class EnemyController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
             // 攻撃モーション実行後、バトルモードに移行
-            BattleManager.Instance.StartBattle(animator).Forget();
+            BattleFlowController .Instance.StartBattle(animator).Forget();
     }
 }
