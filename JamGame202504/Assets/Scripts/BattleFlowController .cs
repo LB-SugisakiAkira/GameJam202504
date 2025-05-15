@@ -2,33 +2,38 @@ using Cysharp.Threading.Tasks;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public class BattleFlowController  : SingletonMonoBehaviour<BattleFlowController >
+public class BattleFlowController : SingletonMonoBehaviour<BattleFlowController>
 {
     [SerializeField] private GameObject battleUI;
     [SerializeField] private CinemachineInputAxisController cameraController;
     [SerializeField] private PlayerController player;
 
+    private EnemyController _battleEnemy;
+
     /**
      * バトルの開始
      */
-    public async UniTaskVoid StartBattle(Animator enemyAnimator)
+    public async UniTaskVoid StartBattle(EnemyController battleEnemy)
     {
         player.StopControl();
         cameraController.enabled = false;
-        await PlayEnemyAttack(enemyAnimator);
+        _battleEnemy = battleEnemy;
+        await PlayEnemyAttack(_battleEnemy.animator);
+
         battleUI.SetActive(true);
     }
 
     /**
      * バトルの終了
      */
-    public  void EndBattle()
+    public async UniTaskVoid EndBattle()
     {
         battleUI.SetActive(false);
+        await _battleEnemy.OnDefeated();
         player.ResumeControl();
         cameraController.enabled = true;
     }
-    
+
     /**
      * 敵がプレイヤーに攻撃するアニメーション
      * モーション終了を待機する
