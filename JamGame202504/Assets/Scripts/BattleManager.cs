@@ -1,9 +1,11 @@
 using Cysharp.Threading.Tasks;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class BattleManager : SingletonMonoBehaviour<BattleManager>
 {
     [SerializeField] private GameObject battleUI;
+    [SerializeField] private CinemachineInputAxisController cameraController;
     [SerializeField] private PlayerController player;
 
     /**
@@ -12,6 +14,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     public async UniTaskVoid StartBattle(Animator enemyAnimator)
     {
         player.StopControl();
+        cameraController.enabled = false;
         await PlayEnemyAttack(enemyAnimator);
         battleUI.SetActive(true);
     }
@@ -30,7 +33,6 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
         while (enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
             var stateInfo = enemyAnimator.GetCurrentAnimatorStateInfo(0);
-            Debug.Log(stateInfo.normalizedTime);
             if (stateInfo.normalizedTime >= 1f) break; // 再生が終了したらループを抜ける
 
             await UniTask.Yield(); // 次のフレームまで待機
