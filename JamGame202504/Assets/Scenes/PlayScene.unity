@@ -597,13 +597,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 409473815}
+  - component: {fileID: 409473816}
   m_Layer: 5
-  m_Name: GameUI
+  m_Name: TypingGameUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &409473815
 RectTransform:
   m_ObjectHideFlags: 0
@@ -626,6 +627,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &409473816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 409473814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 177e8bad13094484d998e7295c0960d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetTextJapanese: {fileID: 903422901}
+  targetTextRoman: {fileID: 1850800358}
+  inputText: {fileID: 2016795672}
+  remainingTimeText: {fileID: 1898228192}
 --- !u!1 &417116720
 GameObject:
   m_ObjectHideFlags: 0
@@ -1310,7 +1327,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 903422899}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1842,13 +1859,14 @@ GameObject:
   - component: {fileID: 1205420421}
   - component: {fileID: 1205420420}
   - component: {fileID: 1205420422}
+  - component: {fileID: 1205420423}
   m_Layer: 5
   m_Name: BattleUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1205420419
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1922,13 +1940,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afff71de1a2ee88438d0b2ba3d882325, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  battleView: {fileID: 1205420423}
+  gameView: {fileID: 409473816}
+--- !u!114 &1205420423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205420418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a877354e3c56144c8b728e6ed8a3fd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   purposeText: {fileID: 1102341954}
   startNoticeText: {fileID: 1251672648}
   startCountdownText: {fileID: 1691377798}
-  gameUI: {fileID: 409473814}
-  targetTextJapanese: {fileID: 903422901}
-  targetTextRoman: {fileID: 1850800358}
-  inputText: {fileID: 2016795672}
 --- !u!1 &1251672646
 GameObject:
   m_ObjectHideFlags: 0
@@ -2444,7 +2472,7 @@ MonoBehaviour:
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
-    m_VerticalOverflow: 0
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 3
 --- !u!222 &1691377799
