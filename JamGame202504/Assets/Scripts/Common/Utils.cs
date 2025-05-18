@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace Common
 {
@@ -15,21 +16,23 @@ namespace Common
         public static async UniTask Countdown(float countdownTime, bool displayFraction, Action<string> updateDisplay,
             Action onEnd = null)
         {
-            var remainingTime = countdownTime * 1000;
+            var remainingTime = countdownTime;
+            var targetTime = Time.realtimeSinceStartup + countdownTime;
+
+            var timeText = displayFraction ? remainingTime.ToString("F2") : ((int)remainingTime).ToString();
+            updateDisplay(timeText);
 
             while (remainingTime > 0)
             {
-                var timeText = displayFraction
-                    ? (remainingTime / 1000).ToString("F3")
-                    : ((int)(remainingTime / 1000)).ToString();
-                var delayTime = displayFraction ? 1 : 1000;
+                var delaySeconds = displayFraction ? 10 : 1000;
+                await UniTask.Delay(delaySeconds);
+                remainingTime = targetTime - Time.realtimeSinceStartup;
 
+                timeText = displayFraction ? remainingTime.ToString("F2") : ((int)remainingTime).ToString();
                 updateDisplay(timeText);
-
-                await UniTask.Delay(delayTime);
-                remainingTime -= delayTime;
             }
 
+            
             onEnd?.Invoke();
         }
     }
