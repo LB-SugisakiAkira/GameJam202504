@@ -29,8 +29,10 @@ namespace Battle
             //todo 制限時間と目標文字数の表示
         }
 
-        private void Update()
+        private void OnGUI()
         {
+            if (Event.current.type != EventType.KeyDown) return;
+
             switch (battleState)
             {
                 case BattleState.Ready:
@@ -81,10 +83,11 @@ namespace Battle
             if (currentTargetCharIndex >= battleModel.TargetRomanText.Length) return;
 
             // 正解チェック
-            if (userInput.Equals(battleModel.TargetRomanText[currentTargetCharIndex].ToString(), StringComparison.OrdinalIgnoreCase))
+            if (userInput.Equals(battleModel.TargetRomanText[currentTargetCharIndex].ToString(),
+                    StringComparison.OrdinalIgnoreCase))
             {
-                Debug.Log("正解!");
                 currentTargetCharIndex++;
+                gameView.UpdateTargetTextColor(battleModel.TargetRomanText, currentTargetCharIndex);
 
                 // すべての文字が入力された場合の処理
                 if (currentTargetCharIndex >= battleModel.TargetRomanText.Length)
