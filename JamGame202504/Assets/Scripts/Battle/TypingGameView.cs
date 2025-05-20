@@ -27,9 +27,6 @@ namespace Battle
         public void UpdateTargetTextColor(string text, int correctCount)
         {
             targetTextRoman.text = HighlightCorrectCharacters(text, correctCount);
-
-            //todo 合わせて日本語の方も更新
-            //targetTextJapanese.text = HighlightCorrectCharacters(targetTextJapanese.text, correctCount);
         }
 
         private string HighlightCorrectCharacters(string text, int correctCount)

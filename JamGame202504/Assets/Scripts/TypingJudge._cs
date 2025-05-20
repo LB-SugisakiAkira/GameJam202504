@@ -1,0 +1,210 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Data;
+using UnityEngine;
+
+public class TypingJudge
+{
+    private readonly Dictionary<string, List<string>> kanaToRomajiMap = RomajiConverter.HiraganaToRomajiMap;
+    private List<string> currentRomajiOptions = new(); // 出題文をローマ字にした候補
+
+    private string kanaText = ""; // 現在の出題文(ひらがな)
+
+    private string typedText = ""; // プレイヤーが入力した文(ローマ字)
+
+    public int KanaIndex { get; private set; } // どこまで仮名を処理したか
+    public int RomanIndex { get; private set; } // どこまでローマ字を処理したか
+
+    public void SetKana(string kana)
+    {
+        kanaText = kana;
+        typedText = "";
+        KanaIndex = 0;
+        UpdateCurrentRomajiOptions();
+    }
+
+    public bool InputChar(char inputChar)
+    {
+        // typedText += inputChar;
+        //
+        // // 現在の入力が currentRomajiOptions のいずれかの prefix になっているか確認
+        // var anyPrefixMatch =
+        //     currentRomajiOptions.Any(opt => opt.StartsWith(typedText.Substring(GetTypedRomajiLength())));
+        //
+        // if (!anyPrefixMatch)
+        // {
+        //     // どの候補の prefix にもなっていない → ミス
+        //     typedText = typedText[..^1]; // 入力を巻き戻す
+        //     return false;
+        // }
+        //
+        // // ちょうど一致する候補があれば、仮名1文字分の入力が完了したと判断
+        // var match = currentRomajiOptions.FirstOrDefault(opt =>
+        //     typedText.Substring(GetTypedRomajiLength()) == opt
+        // );
+        //
+        // if (match != null)
+        // {
+        //     KanaIndex += match.Length == 2 && kanaText.Length > KanaIndex + 1 &&
+        //                  kanaToRomajiMap.ContainsKey(kanaText.Substring(KanaIndex, 2))
+        //         ? 2
+        //         : 1;
+        //
+        //     UpdateCurrentRomajiOptions();
+        // }
+        //
+        // return true;
+
+        var isMatch = false;
+        var currentText = typedText + inputChar;
+        Debug.Log(currentText);
+        
+        if (currentText == GetResolvedRomajiFromInput()[..(KanaIndex+1)])
+        {
+            Debug.Log("☆0");
+            isMatch = true;
+        }
+        else
+        {
+            Debug.Log("☆1");
+            // 別の打ち方で正解だった場合は候補テキストを更新
+            foreach (var romaji in currentRomajiOptions.Where(romaji => romaji.StartsWith(inputChar)))
+            {
+                Debug.Log("☆2");
+                if (typedText + romaji == currentText)
+                {
+                    Debug.Log("☆3");
+                    isMatch = true;
+                    break;
+                }
+        
+                Debug.Log("☆4");
+            }
+        }
+        
+        if (isMatch)
+        {
+            RomanIndex++;
+            typedText += inputChar;
+            UpdateCurrentRomajiOptions();
+            foreach (var romaji in currentRomajiOptions)
+            {
+                Debug.Log(romaji);
+            }
+        }
+        return isMatch;
+    }
+
+    private void UpdateCurrentRomajiOptions()
+    {
+        currentRomajiOptions.Clear();
+
+        if (KanaIndex >= kanaText.Length)
+            return;
+
+        // 「2文字の仮名（拗音など）」が使えるか確認
+        var twoChars = KanaIndex + 1 < kanaText.Length
+            ? kanaText.Substring(KanaIndex, 2)
+            : null;
+
+        if (twoChars != null && kanaToRomajiMap.TryGetValue(twoChars, out var romajis2))
+            currentRomajiOptions.AddRange(romajis2);
+
+        // 「1文字の仮名」が使える場合
+        var oneChar = kanaText.Substring(KanaIndex, 1);
+        if (kanaToRomajiMap.TryGetValue(oneChar, out var romajis1)) currentRomajiOptions.AddRange(romajis1);
+
+        // 候補をローマ字の短い順に並べておくと prefix 判定がしやすい
+        currentRomajiOptions = currentRomajiOptions.OrderBy(r => r.Length).ToList();
+    }
+
+    public string GetResolvedRomajiFromInput()
+    {
+        var sb = new StringBuilder();
+        var startIndex = 0;
+        var inputIndex = 0;
+
+        while (startIndex < kanaText.Length)
+        {
+            // 最大2文字で chunk を試す（拗音用）
+            var chunkLength = startIndex + 1 < kanaText.Length ? 2 : 1;
+            var chunk = kanaText.Substring(startIndex, chunkLength);
+
+            // chunk が見つからない場合は、1文字で再トライ
+            if (!kanaToRomajiMap.TryGetValue(chunk, out var romajiOptions))
+            {
+                // fallback: 1文字で再チャレンジ
+                chunk = kanaText.Substring(startIndex, 1);
+                chunkLength = 1;
+
+                if (!kanaToRomajiMap.TryGetValue(chunk, out romajiOptions))
+                {
+                    // マップにないのでローマ字にできない → スキップ or 無視する（ここでは無視）
+                    startIndex += 1;
+                    continue;
+                }
+            }
+
+            // 入力がまだ残っているかチェック
+            if (!string.IsNullOrEmpty(typedText) && inputIndex < typedText.Length)
+            {
+                // マッチする候補を探す
+                var matched = romajiOptions.FirstOrDefault(r =>
+                    typedText.Length >= inputIndex + r.Length &&
+                    typedText.Substring(inputIndex, r.Length) == r
+                );
+
+                if (matched != null)
+                {
+                    sb.Append(matched);
+                    inputIndex += matched.Length;
+                }
+                else
+                {
+                    // 不一致 → 先頭候補を使用
+                    sb.Append(romajiOptions[0]);
+                }
+            }
+            else
+            {
+                // 入力がない or 終わってる → 先頭候補を使用
+                sb.Append(romajiOptions[0]);
+            }
+
+            startIndex += chunkLength;
+        }
+
+        return sb.ToString();
+    }
+
+    private int GetTypedRomajiLength()
+    {
+        var index = 0;
+        var kanaPos = 0;
+
+        while (kanaPos < KanaIndex && kanaPos < kanaText.Length)
+        {
+            var chunkLength = kanaPos + 1 < kanaText.Length ? 2 : 1;
+            var chunk = kanaText.Substring(kanaPos, chunkLength);
+
+            if (!kanaToRomajiMap.TryGetValue(chunk, out var options))
+            {
+                chunk = kanaText.Substring(kanaPos, 1);
+                chunkLength = 1;
+                kanaToRomajiMap.TryGetValue(chunk, out options);
+            }
+
+            if (options != null) index += options[0].Length; // 先頭候補で計算
+
+            kanaPos += chunkLength;
+        }
+
+        return index;
+    }
+
+    public bool IsFinished()
+    {
+        return KanaIndex >= kanaText.Length;
+    }
+}

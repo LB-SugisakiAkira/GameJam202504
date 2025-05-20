@@ -8,7 +8,7 @@ public class BattleFlowController : SingletonMonoBehaviour<BattleFlowController>
     [SerializeField] private CinemachineInputAxisController cameraController;
     [SerializeField] private PlayerController player;
 
-    private EnemyController _battleEnemy;
+    private EnemyController currentEnemy;
 
     /**
      * バトルの開始
@@ -17,8 +17,8 @@ public class BattleFlowController : SingletonMonoBehaviour<BattleFlowController>
     {
         player.StopControl();
         cameraController.enabled = false;
-        _battleEnemy = battleEnemy;
-        await PlayEnemyAttack(_battleEnemy.animator);
+        currentEnemy = battleEnemy;
+        await PlayEnemyAttack(currentEnemy.animator);
 
         battleUI.SetActive(true);
     }
@@ -29,7 +29,7 @@ public class BattleFlowController : SingletonMonoBehaviour<BattleFlowController>
     public async UniTaskVoid EndBattle()
     {
         battleUI.SetActive(false);
-        await _battleEnemy.OnDefeated();
+        await currentEnemy.OnDefeated();
         player.ResumeControl();
         cameraController.enabled = true;
     }
